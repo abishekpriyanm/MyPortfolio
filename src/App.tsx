@@ -11,11 +11,13 @@ const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
 const Play = lazy(() => import("./pages/Play"));
 import { LoadingProvider } from "./context/LoadingProvider";
 import { PortfolioProvider } from "./features/portfolio-content/PortfolioProvider";
+import Seo from "./components/Seo";
 
 const App = () => {
   return (
     <BrowserRouter>
       <PortfolioProvider>
+        <Seo />
         <Routes>
         <Route
           path="/"

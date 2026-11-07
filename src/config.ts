@@ -7,7 +7,7 @@ export const config = {
     },
     social: {
         github: "",
-        email: "abishekpriyanm369@gmail.com",
+        email: "abishek@abishekpriyan.dev",
         location: "Chennai, India"
     },
     about: {
@@ -78,7 +78,7 @@ export const config = {
         }
     ],
     contact: {
-        email: "abishekpriyanm369@gmail.com",
+        email: "abishek@abishekpriyan.dev",
         github: "",
         linkedin: "",
         twitter: "",

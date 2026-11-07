@@ -70,7 +70,7 @@ with initial_content as (
       'description', 'I’m an AI Engineer and Full-Stack Developer focused on turning AI ideas into production-ready systems.',
       'roles', jsonb_build_array('AI Software Engineer', 'Full-Stack Developer', 'Freelancer'),
       'location', 'Chennai, India',
-      'email', 'abishekpriyanm369@gmail.com',
+      'email', 'abishek@abishekpriyan.dev',
       'social', jsonb_build_object('github', '', 'linkedin', '', 'twitter', '', 'instagram', '')
     ),
     'career', jsonb_build_array(
