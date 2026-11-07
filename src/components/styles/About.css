@@ -1,0 +1,142 @@
+.about-section {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  place-items: center;
+  position: relative;
+  opacity: 1;
+  height: auto;
+  width: var(--cWidth);
+  margin: auto;
+}
+.about-me {
+  padding: 40px 0px;
+  padding-bottom: 0;
+  width: 100%;
+  max-width: calc(100% - 15px);
+}
+.about-me h3 {
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-weight: 400;
+  color: var(--accentColor);
+  margin-bottom: 15px;
+}
+
+.about-me p {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 26px;
+  letter-spacing: 0.5px;
+  word-spacing: 2px;
+}
+
+.about-me .split-word {
+  display: inline-block;
+  margin-right: 0.3em;
+}
+
+.about-me .split-line {
+  display: block;
+}
+
+@media only screen and (min-width: 600px) {
+  .about-section {
+    justify-content: center;
+  }
+  .about-me {
+    width: 500px;
+  }
+  .about-me h3 {
+    font-size: 22px;
+    letter-spacing: 6px;
+  }
+  .about-me p {
+    font-size: 28px;
+    line-height: 32px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .about-me {
+    width: 500px;
+    max-width: calc(100% - 70px);
+    transform: translateY(0%);
+  }
+  .about-me h3 {
+    font-size: 25px;
+    letter-spacing: 7px;
+  }
+  .about-me p {
+    font-size: 33px;
+    line-height: 36px;
+  }
+  .about-section {
+    opacity: 1;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .about-section {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: auto;
+    overflow: visible;
+    scroll-margin-top: 70svh;
+  }
+
+  .about-me {
+    display: block;
+    width: 100%;
+    max-width: min(760px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: clamp(32px, 5svh, 52px) 0 clamp(88px, 12svh, 140px);
+  }
+
+  .about-me h3 {
+    display: block;
+    margin: 0 0 clamp(32px, 6svh, 64px);
+    color: var(--accentColor);
+    font-size: clamp(34px, 9vw, 48px);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 0.95;
+    text-align: left;
+  }
+
+  .about-me p {
+    margin: 0;
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: 0.01em;
+    word-spacing: normal;
+    text-wrap: pretty;
+  }
+}
+
+@media only screen and (min-width: 1025px) {
+  .about-section {
+    width: var(--cWidth);
+    justify-content: right;
+    max-width: 1920px;
+    height: var(--vh);
+    padding: 0px;
+    opacity: 1;
+  }
+  .about-me {
+    padding: 0px;
+    width: 50%;
+  }
+  .about-me p {
+    font-size: 1.9vw;
+    line-height: 2.3vw;
+  }
+}
+@media only screen and (min-width: 1950px) {
+  .about-me p {
+    font-size: 2.5rem;
+    line-height: 2.7rem;
+  }
+}
