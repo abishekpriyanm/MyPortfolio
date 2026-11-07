@@ -4,8 +4,9 @@ export class TextSplitter {
   words: Element[] = [];
   lines: Element[] = [];
   elements: Element[] = [];
-  selector: string | Function;
+  selector: string;
   private originalHTML: Map<Element, string> = new Map();
+  private lineFrames = new Set<number>();
 
   constructor(target: string | Element | NodeListOf<Element> | Element[], vars?: { type?: string; linesClass?: string }) {
     const type = vars?.type || "chars,words,lines";
@@ -95,27 +96,30 @@ export class TextSplitter {
 
   private splitLines(element: Element, linesClass: string) {
     // Use requestAnimationFrame to ensure layout is complete
-    requestAnimationFrame(() => {
-      const items = element.querySelectorAll(".split-word, .split-char");
+    const frame = requestAnimationFrame(() => {
+      this.lineFrames.delete(frame);
+      const words = element.querySelectorAll(":scope > .split-word");
+      const items = words.length ? words : element.querySelectorAll(":scope > .split-char");
       if (items.length === 0) return;
 
       let currentLine: Element[] = [];
-      let lines: Element[][] = [];
-      let currentTop = 0;
+      const lines: Element[][] = [];
+      let currentTop: number | null = null;
 
       items.forEach((item) => {
-        const rect = item.getBoundingClientRect();
-        if (currentTop === 0) {
-          currentTop = rect.top;
+        // Layout positions stay stable while GSAP translates or rotates text.
+        const top = (item as HTMLElement).offsetTop;
+        if (currentTop === null) {
+          currentTop = top;
         }
 
-        if (Math.abs(rect.top - currentTop) > 5) {
+        if (Math.abs(top - currentTop) > 5) {
           // New line
           if (currentLine.length > 0) {
             lines.push([...currentLine]);
           }
           currentLine = [item];
-          currentTop = rect.top;
+          currentTop = top;
         } else {
           currentLine.push(item);
         }
@@ -133,21 +137,30 @@ export class TextSplitter {
         lineWrapper.style.display = "block";
         const firstItem = line[0];
         firstItem.parentNode?.insertBefore(lineWrapper, firstItem);
-        line.forEach((item) => {
-          if (item.parentNode === lineWrapper.parentNode) {
-            lineWrapper.appendChild(item);
-          }
-        });
+        const lastItem = line[line.length - 1];
+        let node: ChildNode | null = firstItem;
+        while (node) {
+          const next: ChildNode | null = node.nextSibling;
+          lineWrapper.appendChild(node);
+          if (node === lastItem) break;
+          node = next;
+        }
       });
 
       this.lines.push(...Array.from(element.querySelectorAll(`.${linesClass}`)));
     });
+    this.lineFrames.add(frame);
   }
 
   revert() {
+    this.lineFrames.forEach((frame) => cancelAnimationFrame(frame));
+    this.lineFrames.clear();
     this.elements.forEach((element) => {
       const original = this.originalHTML.get(element);
-      if (original !== undefined) {
+      const splitItems = [...this.chars, ...this.words];
+      // React may have replaced split content with a newer published revision.
+      const stillOwnsContent = splitItems.some((item) => element.contains(item));
+      if (original !== undefined && (stillOwnsContent || splitItems.length === 0)) {
         element.innerHTML = original;
       }
     });

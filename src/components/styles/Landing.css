@@ -363,7 +363,7 @@ h2.landing-info-h2 {
     top: 40%;
     left: clamp(32px, 3vw, 72px);
     right: auto;
-    width: min(34vw, 560px);
+    width: min(28vw, 560px);
     transform: translate(0%, -50%);
   }
 
@@ -373,28 +373,9 @@ h2.landing-info-h2 {
     z-index: inherit;
     text-align: left;
     transform: translate(0%, -50%);
-    right: auto;
-    left: 66%;
-  }
-}
-
-@media screen and (min-width: 1200px) {
-  .landing-intro {
-    top: 40%;
-    left: clamp(32px, 3vw, 72px);
-    right: auto;
-    width: min(34vw, 560px);
-    transform: translate(0%, -50%);
-  }
-
-  .landing-info {
-    bottom: auto;
-    top: 51%;
-    z-index: inherit;
-    text-align: left;
-    transform: translate(0%, -50%);
-    right: auto;
-    left: 70%;
+    right: clamp(24px, 3vw, 72px);
+    left: auto;
+    width: min(29vw, 560px);
   }
 }
 
@@ -403,22 +384,43 @@ h2.landing-info-h2 {
     font-size: 35px;
   }
 
-  .landing-intro h1 {
-    font-size: 60px;
-    line-height: 55px;
-  }
-
   .landing-info h3 {
     font-size: 35px;
   }
 
-  .landing-info h2 {
-    font-size: 65px;
-    line-height: 62px;
+}
+
+@media screen and (min-width: 1025px) {
+  .landing-info h3 {
+    font-size: clamp(16px, 1.4vw, 24px);
   }
 
+  .landing-intro h1 {
+    font-size: clamp(26px, 2.2vw, 42px);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  .landing-info h2,
   h2.landing-info-h2 {
-    font-size: 75px;
+    display: block;
+    width: 100%;
+    margin: 8px 0 0;
+    font-size: clamp(18px, 1.8vw, 34px);
+    line-height: 1.25;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .landing-h2-1,
+  .landing-h2-info {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .landing-info-h2::after {
+    display: none;
   }
 }
 
@@ -726,15 +728,5 @@ h2.landing-info-h2 {
 
   .landing-h2-info {
     font-size: 20px !important;
-  }
-}
-
-@media screen and (min-width: 1025px) {
-  h2.landing-info-h2 {
-    font-size: clamp(27px, 2.3vw, 65px);
-  }
-
-  .landing-info h2:not(.landing-info-h2) {
-    font-size: clamp(24px, 2vw, 55px);
   }
 }

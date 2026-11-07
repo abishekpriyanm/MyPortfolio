@@ -51,13 +51,12 @@
 .work-flex::before,
 .work-flex::after {
   content: "";
-  width: calc(50000vw);
+  width: 100%;
   height: 1px;
   background-color: #363636;
   position: absolute;
-  left: 50%;
+  left: 0;
   top: 0;
-  transform: translateX(-50%);
 }
 
 .work-flex::after {
@@ -69,13 +68,17 @@
   display: flex;
   width: 100%;
   margin-bottom: 20px;
+  gap: 16px;
 }
 
 .work-title>div {
   text-align: right;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .work-title h3 {
+  flex-shrink: 0;
   font-size: 50px;
   line-height: 50px;
   margin: 0;
@@ -97,6 +100,7 @@
 
 .work-info>p {
   width: 90%;
+  overflow-wrap: anywhere;
 }
 
 .work-image {
@@ -292,7 +296,7 @@
 }
 
 /* Mobile: Stack work items vertically when GSAP pinning is disabled */
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 768px), (prefers-reduced-motion: reduce) {
   .work-section {
     height: auto;
     min-height: auto;

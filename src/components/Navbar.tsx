@@ -49,7 +49,9 @@ const Navbar = () => {
           if (section && lenis) {
             const target = document.querySelector(section) as HTMLElement;
             if (target) {
-              lenis.scrollTo(target, {
+              const spacer = target.parentElement;
+              const scrollTarget = spacer?.classList.contains("pin-spacer") ? spacer : target;
+              lenis.scrollTo(scrollTarget, {
                 offset: 0,
                 duration: 1.5,
               });

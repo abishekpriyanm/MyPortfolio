@@ -2,7 +2,7 @@ import "./styles/Work.css";
 import WorkImage from "./WorkImage";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { usePortfolio } from "../features/portfolio-content/PortfolioProvider";
 import { Link } from "react-router-dom";
 
@@ -10,67 +10,87 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Work = () => {
   const { content } = usePortfolio();
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
   const projects = content.projects
     .filter((project) => project.visible)
     .sort((left, right) => left.order - right.order)
     .slice(0, 5);
 
-  useEffect(() => {
-    // Disable pinning on mobile to allow scrolling
-    if (window.innerWidth <= 768) return;
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    const rail = railRef.current;
+    if (!section || !rail) return;
 
-    let translateX: number = 0;
+    let active = true;
+    let refreshFrame = 0;
+    const refresh = () => {
+      if (!active || refreshFrame) return;
+      refreshFrame = requestAnimationFrame(() => {
+        refreshFrame = requestAnimationFrame(() => {
+          refreshFrame = 0;
+          if (active) ScrollTrigger.refresh();
+        });
+      });
+    };
+    const travel = () => Math.max(0, rail.scrollWidth - rail.clientWidth);
+    const media = gsap.matchMedia();
+    media.add("(min-width: 769px) and (prefers-reduced-motion: no-preference)", () => {
+      gsap.fromTo(rail, { x: 0 }, {
+        x: () => -travel(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${Math.max(1, travel())}`,
+          scrub: 1,
+          pin: true,
+          pinSpacing: true,
+          anticipatePin: 1,
+          id: "work",
+          invalidateOnRefresh: true,
+        },
+      });
+      refresh();
+    });
 
-    function setTranslateX() {
-      const box = document.getElementsByClassName("work-box");
-      if (box.length === 0) return;
-      const rectLeft = document
-        .querySelector(".work-container")!
-        .getBoundingClientRect().left;
-      const rect = box[0].getBoundingClientRect();
-      const parentWidth = box[0].parentElement!.getBoundingClientRect().width;
-      const padding: number =
-        parseInt(window.getComputedStyle(box[0]).padding) / 2;
-      translateX = rect.width * box.length - (rectLeft + parentWidth) + padding;
+    // Published content can change the height of any preceding story section.
+    const observer = new ResizeObserver(refresh);
+    observer.observe(rail);
+    let previous = section.parentElement?.classList.contains("pin-spacer")
+      ? section.parentElement.previousElementSibling
+      : section.previousElementSibling;
+    while (previous) {
+      observer.observe(previous);
+      previous = previous.previousElementSibling;
     }
-
-    setTranslateX();
-
-    const timeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".work-section",
-        start: "top top",
-        end: `+=${translateX}`,
-        scrub: 1,
-        pin: true,
-        pinSpacing: true,
-        anticipatePin: 1,
-        id: "work",
-        invalidateOnRefresh: true,
-      },
+    const images = [...section.querySelectorAll("img")];
+    images.forEach((image) => {
+      image.addEventListener("load", refresh);
+      image.addEventListener("error", refresh);
     });
-
-    timeline.to(".work-flex", {
-      x: -translateX,
-      ease: "none",
-    });
-
-    // Refresh ScrollTrigger after layout settles
-    ScrollTrigger.refresh();
+    void document.fonts?.ready.then(refresh);
+    refresh();
 
     // Clean up
     return () => {
-      timeline.kill();
-      ScrollTrigger.getById("work")?.kill();
+      active = false;
+      cancelAnimationFrame(refreshFrame);
+      observer.disconnect();
+      images.forEach((image) => {
+        image.removeEventListener("load", refresh);
+        image.removeEventListener("error", refresh);
+      });
+      media.revert();
     };
-  }, [projects.length]);
+  }, [content]);
   return (
-    <div className="work-section" id="work">
+    <div className="work-section" id="work" ref={sectionRef}>
       <div className="work-container section-container">
         <h2>
           My <span>Work</span>
         </h2>
-        <div className="work-flex">
+        <div className="work-flex" ref={railRef}>
           {projects.map((project, index) => (
             <div className="work-box" key={project.id}>
               <div className="work-info">

@@ -11,20 +11,28 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function setSplitText() {
   ScrollTrigger.config({ ignoreMobileResize: true });
-  if (window.innerWidth <= 1024) return;
   const paras: NodeListOf<ParaElement> = document.querySelectorAll(".para");
   const titles: NodeListOf<ParaElement> = document.querySelectorAll(".title");
+  const targets = [...paras, ...titles];
+  const clear = () => {
+    targets.forEach((element) => {
+      element.anim?.scrollTrigger?.kill();
+      element.anim?.kill();
+      element.split?.revert();
+      delete element.anim;
+      delete element.split;
+    });
+  };
+  clear();
+  paras.forEach((para) => para.classList.add("visible"));
+  if (window.innerWidth <= 1024 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return clear;
+  }
 
   const TriggerStart = window.innerWidth <= 1024 ? "top 60%" : "20% 60%";
   const ToggleAction = "play pause resume reverse";
 
   paras.forEach((para: ParaElement) => {
-    para.classList.add("visible");
-    if (para.anim) {
-      para.anim.progress(1).kill();
-      para.split?.revert();
-    }
-
     para.split = new TextSplitter(para, {
       type: "lines,words",
       linesClass: "split-line",
@@ -48,10 +56,6 @@ export default function setSplitText() {
     );
   });
   titles.forEach((title: ParaElement) => {
-    if (title.anim) {
-      title.anim.progress(1).kill();
-      title.split?.revert();
-    }
     title.split = new TextSplitter(title, {
       type: "chars,lines",
       linesClass: "split-line",
@@ -75,5 +79,6 @@ export default function setSplitText() {
     );
   });
 
-  ScrollTrigger.addEventListener("refresh", () => setSplitText());
+  // Refreshes measure existing layout; they must never rebuild that layout.
+  return clear;
 }
