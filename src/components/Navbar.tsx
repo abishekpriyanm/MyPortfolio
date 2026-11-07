@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import Lenis from "lenis";
 import "./styles/Navbar.css";
 import { usePortfolio } from "../features/portfolio-content/PortfolioProvider";
+import { config } from "../config";
 
 gsap.registerPlugin(ScrollTrigger);
 export let lenis: Lenis | null = null;
@@ -83,11 +84,11 @@ const Navbar = () => {
           {content.about.name.toUpperCase()}
         </a>
         <a
-          href={`mailto:${content.about.email}`}
+          href={`mailto:${config.contact.email}`}
           className="navbar-connect"
           data-cursor="disable"
         >
-          {content.about.email}
+          {config.contact.email}
         </a>
         <button
           className="nav-menu-toggle"

@@ -4,6 +4,7 @@ import { FaGithub, FaInstagram, FaLinkedinIn, FaXTwitter } from "react-icons/fa6
 import socialLinksConfig from "../data/social-links.json";
 import "./styles/Contact.css";
 import { usePortfolio } from "../features/portfolio-content/PortfolioProvider";
+import { config } from "../config";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect } from "react";
@@ -84,8 +85,8 @@ const Contact = () => {
           <div className="contact-box">
             <h4>Email</h4>
             <p>
-              <a href={`mailto:${content.about.email}`} data-cursor="disable">
-                {content.about.email}
+              <a href={`mailto:${config.contact.email}`} data-cursor="disable">
+                {config.contact.email}
               </a>
             </p>
             <h4>Location</h4>

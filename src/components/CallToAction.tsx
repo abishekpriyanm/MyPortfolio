@@ -1,9 +1,10 @@
 import { usePortfolio } from "../features/portfolio-content/PortfolioProvider";
+import { config } from "../config";
 import "./styles/CallToAction.css";
 
 const CallToAction = () => {
   const { content } = usePortfolio();
-  const hireLink = content.about.social.linkedin || `mailto:${content.about.email}`;
+  const hireLink = content.about.social.linkedin || `mailto:${config.contact.email}`;
 
   return (
     <div className="cta-section">
